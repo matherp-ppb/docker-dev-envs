@@ -16,6 +16,7 @@ RUN apk -v --no-cache --update add \
         nodejs \
         npm \
         python3 \
+        py3-pip \
         ca-certificates \
         github-cli \
         groff \
@@ -29,7 +30,8 @@ RUN apk -v --no-cache --update add \
         git \
         && \
     update-ca-certificates && \
-    npm install -g aws-cdk@${AWS_CDK_VERSION} \
+    pip install yawsso && \
+    npm install -g aws-cdk@${AWS_CDK_VERSION} cdk-assume-role-credential-plugin fs-extra chalk @aws-cdk/cloudformation-diff \
     && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk \

@@ -3,28 +3,55 @@ Set of docker containers to use as development environments
 
 Clone this repo and then...
 
+
+
 ```
-aws sso login --no-browser
-Browser will not be automatically opened.
-Please visit the following URL:
+➜ aws configure sso --profile tribe-prod-developerAdmin
+> aws configure sso --profile tribe-prod-developerAdmin
+SSO start URL [None]: https://d-93670ced1d.awsapps.com/start
+SSO Region [None]: eu-west-1
+There are 5 AWS accounts available to you.
+Using the account ID 184009931817
+The only role available to you is: tribe-prod-developerAdmin
+Using the role name "tribe-prod-developerAdmin"
+CLI default client Region [None]: eu-west-1
+CLI default output format [None]: json
 
-https://device.sso.eu-west-1.amazonaws.com/
+To use this profile, specify the profile name using --profile, as shown:
 
-Then enter the code:
+aws s3 ls --profile tribe-tooling-developerAdmin
 
-XXXX-XXXX
+➜ aws configure sso --profile tribe-dev-developerAdmin
+> aws configure sso --profile tribe-dev-developerAdmin
+SSO start URL [None]: https://d-93670ced1d.awsapps.com/start
+SSO Region [None]: eu-west-1
+There are 5 AWS accounts available to you.
+Using the account ID 069140385617
+The only role available to you is: tribe-dev-developerAdmin
+Using the role name "tribe-dev-developerAdmin"
+CLI default client Region [None]: eu-west-1
+CLI default output format [None]: json
 
-Alternatively, you may visit the following URL which will autofill the code upon loading:
-https://device.sso.eu-west-1.amazonaws.com/?user_code=XXXX-XXXX
-Successfully logged into Start URL: https://d-93670ced1d.awsapps.com/start
-/opt/app # aws sts get-caller-identity
-> aws sts get-caller-identity
-{
-    "UserId": "AROA5GJT5SJ7XPAABPOE6:philip.mather@paddypowerbetfair.com",
-    "Account": "906883863167",
-    "Arn": "arn:aws:sts::906883863167:assumed-role/AWSReservedSSO_InfraAdmin_ddf68f2f2ef15701/philip.mather@paddypowerbetfair.com"
-}
+To use this profile, specify the profile name using --profile, as shown:
+
+aws s3 ls --profile tribe-dev-developerAdmin
+
+➜ aws configure sso --profile tribe-tooling-developerAdmin
+> aws configure sso --profile tribe-tooling-developerAdmin
+SSO start URL [None]: https://d-93670ced1d.awsapps.com/start
+SSO Region [None]: eu-west-1
+There are 5 AWS accounts available to you.
+Using the account ID 330941722859
+There are 2 roles available to you.
+Using the role name "tribe-tooling-developerAdmin"
+CLI default client Region [None]: eu-west-1
+CLI default output format [None]: json
+
+To use this profile, specify the profile name using --profile, as shown:
+
+aws s3 ls --profile tribe-tooling-developerAdmin
 ```
+You now have SSO logged in but the older versions of CDK need temporary creds so inside the container I've installed yawsso that grabs them and syncs from SSO.
 
 Use the Makefile for shortcuts...
 ```
@@ -119,5 +146,14 @@ To github.com:matherp-ppb/docker-dev-envs.git
  * [new tag]         1.91.0 -> 1.91.0
 ```
 
+CDK Synth
+```
+sudo npm install -g cdk cdk-assume-role-credential-plugin fs-extra chalk
+```
+
 ## Later
+Alpine version not showing in ENVs
+https://cli.github.com/manual/gh_release_create
+change make gitTag to make tag for both github and docker
+add make release that adds tagged docker image to github and releases
 Investigate https://app.snyk.io/account

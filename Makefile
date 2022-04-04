@@ -19,16 +19,16 @@ scan:
 	docker scan $(DOCKER_ID)/$(IMAGE_NAME)
 
 test:
-	docker run --rm -it $(DOCKER_ID)/$(IMAGE_NAME) sh -c 'cat /proc/version && printf "CDK " && cdk --version && aws --version'
+	docker run --rm -it $(DOCKER_ID)/$(IMAGE_NAME) sh -c 'cat /proc/version && printf "CDK: " && cdk --version && aws --version && printf "NPM: " && npm -v && printf "Node: " && node -v'
 
 shell:
-	docker run --rm -it -w /home/$(USER) -v ~/.aws:/root/.aws -v $(HOME):/home/$(USERNAME) $(DOCKER_ID)/$(IMAGE_NAME) /bin/sh
+	docker run --rm -it -w /home/$(USER) -v ~/.aws:/root/.aws -v ~/.npmrc:/root/.npmrc -v $(HOME):/home/$(USER) $(DOCKER_ID)/$(IMAGE_NAME) /bin/sh
 
 run:
-	docker run -itd -w /home/$(USER) -v ~/.aws/:/root/.aws -v $(HOME)/:/home/$(USERNAME) --name $(IMAGE_NAME) $(DOCKER_ID)/$(IMAGE_NAME) /bin/sh
+	docker run -itd -w /home/$(USER) -v ~/.aws/:/root/.aws -v ~/.npmrc:/root/.npmrc -v $(HOME)/:/home/$(USER) --name $(IMAGE_NAME) $(DOCKER_ID)/$(IMAGE_NAME) /bin/sh
 
 exec:
-	docker exec -it -w /home/$(USERNAME) $(IMAGE_NAME) /bin/sh
+	docker exec -it -w /home/$(USER) $(IMAGE_NAME) /bin/sh
 
 gitTag:
 	-git tag -d $(TAG)
