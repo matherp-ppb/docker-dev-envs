@@ -29,7 +29,7 @@ coffee  - As per work but will run a security scan between build and test stage.
 ```
 
 Rest of demo here...
-[![asciicast](https://asciinema.org/a/484788.svg)](https://asciinema.org/a/484788)
+[![asciicast](https://asciinema.org/a/484866.svg)](https://asciinema.org/a/484866)
 
 If you have not already setup aws sso this is how roughly, you need to be added to the right AD groups which are below the existing ones in AD.
 

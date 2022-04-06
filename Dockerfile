@@ -33,7 +33,7 @@ RUN apk -v --no-cache --update add \
         wget \
         zip && \
     update-ca-certificates && \
-    npm install -g aws-cdk@${AWS_CDK_VERSION} cdk-assume-role-credential-plugin fs-extra @aws-cdk/cloudformation-diff \
+    npm install -g aws-cdk@${AWS_CDK_VERSION} cdk-assume-role-credential-plugin fs-extra @aws-cdk/cloudformation-diff @mhlabs/cfn-diagram \
     && npm install -g chalk@4.1.2 --save-exact \
     && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
@@ -53,7 +53,6 @@ RUN adduser -D ${USER} \
     && echo "${USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER} \
     && chmod 0440 /etc/sudoers.d/${USER}
 
-VOLUME [ "/root/.aws" ]
 VOLUME [ "/opt/app" ]
 
 # Allow for caching python modules

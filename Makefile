@@ -12,10 +12,10 @@ TAG = $(AWS_CDK_VERSION)
 .PHONY: check list
 
 list:
-	@echo "build	- Import *_VERSION files & build the Docker container as per the Dockerfile ."
+	@echo "build	- Import *_VERSION files & build the Docker container as per the Dockerfile."
 	@echo "scan	- Scan the container with snyk for security feedback."
 	@echo "test	- Run the container & echo out versions of key components."
-	@echo "shell	- Run sh in the container with ~ mapped to /root/ + .aws/ and .npmrc, work dir at /home/$(USER), delete on exit."
+	@echo "shell	- Run sh in the container with ~ mapped from outside to inside the container, work dir at /home/$(USER), delete on exit."
 	@echo "run	- Run sh as above but leave running after exit."
 	@echo "exec	- Exec into the container at /home/${USER}."
 	@echo "stop	- Stops the container".
@@ -36,10 +36,10 @@ test:
 	docker run --rm -it $(DOCKER_ID)/$(IMAGE_NAME) sh -c 'cat /proc/version && printf "CDK: " && cdk --version && aws --version && printf "NPM: " && npm -v && printf "Node: " && node -v'
 
 shell:
-	docker run --rm -it -w /home/$(USER) -v ~/.aws:/root/.aws -v ~/.npmrc:/root/.npmrc -v $(HOME):/home/$(USER) $(DOCKER_ID)/$(IMAGE_NAME) /bin/sh
+	docker run --rm -it -w /home/$(USER) -v $(HOME):/home/$(USER) $(DOCKER_ID)/$(IMAGE_NAME) /bin/sh
 
 run:
-	docker run -itd -w /home/$(USER) -v ~/.aws/:/root/.aws -v ~/.npmrc:/root/.npmrc -v $(HOME)/:/home/$(USER) --name $(IMAGE_NAME) $(DOCKER_ID)/$(IMAGE_NAME) /bin/sh
+	docker run -itd -w /home/$(USER) -v $(HOME)/:/home/$(USER) --name $(IMAGE_NAME) $(DOCKER_ID)/$(IMAGE_NAME) /bin/sh
 
 exec:
 	docker exec -it -w /home/$(USER) $(IMAGE_NAME) /bin/sh
