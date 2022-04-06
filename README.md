@@ -1,9 +1,37 @@
 # docker-dev-envs
-Set of docker containers to use as development environments
+Currently just a make file that automates building a docker container with CDK, aws cli and some other bits in to use as development environments.
+Was trying to make this into a next generation of dev environment for AWS 2.0 with only AWS SSO login working with CDK but currently facing assume role issues that Adrian Taut is looking into.
+Asciicinema recording shows how to install aws-azure-login and as /home/$USER/ is mounted into the container your login creds follow you.
+Assumes you have docker desktop + vscode setup, clone this repo and then run make to see a list of what commands are available.
 
-Clone this repo and then...
+Todo
+   Why does cdn-dia not work ATM?
+   Keep aws-azure-login in
+   Remove /root/ mounts now that we use non-root user.
 
+Use the Makefile for shortcuts...
+```
+10:06:37 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝] on 🅰  (eu-west-1) ✗  make
+build   - Import *_VERSION files & build the Docker container as per the Dockerfile .
+scan    - Scan the container with snyk for security feedback.
+test    - Run the container & echo out versions of key components.
+shell   - Run sh in the container with ~ mapped to /root/ + .aws/ and .npmrc, work dir at /home/matherp, delete on exit.
+run     - Run sh as above but leave running after exit.
+exec    - Exec into the container at /home/matherp.
+stop    - Stops the container.
+rm      - Deletes the container.
+rmi     - Deletes the image of the container.
+prune   - Clears up an unattched volumes.
+clean   - Stop, rm, rmi and prune the containers.
+code    - Open VSCode connected to the container in work directory.
+work    - Run make build, test, run, code & exec to get VSCode connected & exec'ed into a clean dev env.
+coffee  - As per work but will run a security scan between build and test stage.
+```
 
+Rest of demo here...
+[![asciicast](https://asciinema.org/a/484788.svg)](https://asciinema.org/a/484788)
+
+If you have not already setup aws sso this is how roughly, you need to be added to the right AD groups which are below the existing ones in AD.
 
 ```
 ➜ aws configure sso --profile tribe-prod-developerAdmin
@@ -50,105 +78,6 @@ CLI default output format [None]: json
 To use this profile, specify the profile name using --profile, as shown:
 
 aws s3 ls --profile tribe-tooling-developerAdmin
-```
-You now have SSO logged in but the older versions of CDK need temporary creds so inside the container I've installed yawsso that grabs them and syncs from SSO.
-
-Use the Makefile for shortcuts...
-```
-make build
-sudo docker build --build-arg ENV_ALPINE_VERSION=3.13 --build-arg ENV_AWS_CDK_VERSION=1.91.0 --build-arg ENV_GLIBC_VERSION=2.31-r0 -t matherpppb/alpine-gh-aws2-cdk1.91.0 .
-Password:
-[+] Building 0.1s (8/8) FINISHED
-...
- => => naming to docker.io/matherpppb/alpine-gh-aws2-cdk1.91.0                                0.0s
-
-23:20:11 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝🤷] on 🅰 (eu-west-1) ➜ make scan
-docker scan matherpppb/alpine-gh-aws2-cdk1.91.0
-
-Testing matherpppb/alpine-gh-aws2-cdk1.91.0...
-
-Package manager:   apk
-Project name:      docker-image|matherpppb/alpine-gh-aws2-cdk1.91.0
-Docker image:      matherpppb/alpine-gh-aws2-cdk1.91.0
-Platform:          linux/amd64
-Base image:        alpine:3.13.9
-
-✔ Tested 51 dependencies for known vulnerabilities, no vulnerable paths found.
-
-According to our scan, you are currently using the most secure version of the selected base image
-
-For more free scans that keep your images secure, sign up to Snyk at https://dockr.ly/3ePqVcp
-
-23:25:15 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝🤷] on 🅰 (eu-west-1) ➜ make test
-docker run --rm -it matherpppb/alpine-gh-aws2-cdk1.91.0 sh -c 'cat /proc/version && printf "CDK " && cdk --version && aws --version'
-Linux version 5.10.104-linuxkit (root@buildkitsandbox) (gcc (Alpine 10.2.1_pre1) 10.2.1 20201203, GNU ld (GNU Binutils) 2.35.2) #1 SMP Wed Mar 9 19:05:23 UTC 2022
-CDK 1.91.0 (build 0f728ce)
-aws-cli/2.5.2 Python/3.9.11 Linux/5.10.104-linuxkit exe/x86_64.alpine.3 prompt/off
-
-23:25:19 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝🤷] on 🅰 (eu-west-1) ➜ docker ps
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-
-23:25:26 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝🤷] on 🅰 (eu-west-1) ➜ make shell
-docker run --rm -it -w /home/matherp -v ~/.aws:/root/.aws -v /Users/matherp:/home/ matherpppb/alpine-gh-aws2-cdk1.91.0 /bin/sh
-/home/matherp # cat /proc/version && printf "CDK " && cdk --version && aws --version
-Linux version 5.10.104-linuxkit (root@buildkitsandbox) (gcc (Alpine 10.2.1_pre1) 10.2.1 20201203, GNU ld (GNU Binutils) 2.35.2) #1 SMP Wed Mar 9 19:05:23 UTC 2022
-CDK 1.91.0 (build 0f728ce)
-aws-cli/2.5.2 Python/3.9.11 Linux/5.10.104-linuxkit exe/x86_64.alpine.3 prompt/off
-/home/matherp # ps aux
-PID   USER     TIME  COMMAND
-    1 root      0:00 /bin/sh
-   23 root      0:00 ps aux
-/home/matherp #
-
-23:25:55 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝🤷] on 🅰 (eu-west-1) ➜ make run
-docker run -itd -w /home/matherp -v ~/.aws/:/root/.aws -v /Users/matherp/:/home/ --name alpine-gh-aws2-cdk1.91.0 matherpppb/alpine-gh-aws2-cdk1.91.0 /bin/sh
-12417601fb7fbc3e560e4c5aac3f33202b0fa40a0c49bb9e47b4a6173ade3a9c
-
-23:26:07 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝🤷] on 🅰 (eu-west-1) ➜ make exec
-docker exec -it -w /home/ alpine-gh-aws2-cdk1.91.0 /bin/sh
-/home # cat /proc/version && printf "CDK " && cdk --version && aws --version
-Linux version 5.10.104-linuxkit (root@buildkitsandbox) (gcc (Alpine 10.2.1_pre1) 10.2.1 20201203, GNU ld (GNU Binutils) 2.35.2) #1 SMP Wed Mar 9 19:05:23 UTC 2022
-CDK 1.91.0 (build 0f728ce)
-aws-cli/2.5.2 Python/3.9.11 Linux/5.10.104-linuxkit exe/x86_64.alpine.3 prompt/off
-/home # aws sso login --no-browser
-> aws sso login --no-browser
-Browser will not be automatically opened.
-Please visit the following URL:
-
-https://device.sso.eu-west-1.amazonaws.com/
-
-Then enter the code:
-
-XXXX-XXXX
-
-Alternatively, you may visit the following URL which will autofill the code upon loading:
-https://device.sso.eu-west-1.amazonaws.com/?user_code=GBHG-BRDF
-Successfully logged into Start URL: https://d-93670ced1d.awsapps.com/start
-/home # aws sts get-caller-identity
-> aws sts get-caller-identity
-{
-    "UserId": "AROA5GJT5SJ7XPAABPOE6:philip.mather@paddypowerbetfair.com",
-    "Account": "906883863167",
-    "Arn": "arn:aws:sts::906883863167:assumed-role/AWSReservedSSO_InfraAdmin_ddf68f2f2ef15701/philip.mather@paddypowerbetfair.com"
-}
-/home #
-
-23:27:32 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝🤷] on 🅰 (eu-west-1) ➜ make gitTag
-git tag -d 1.91.0
-Deleted tag '1.91.0' (was c10f2b8)
-git push origin :refs/tags/1.91.0
-To github.com:matherp-ppb/docker-dev-envs.git
- - [deleted]         1.91.0
-git tag 1.91.0
-git push origin 1.91.0
-Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
-To github.com:matherp-ppb/docker-dev-envs.git
- * [new tag]         1.91.0 -> 1.91.0
-```
-
-CDK Synth
-```
-sudo npm install -g cdk cdk-assume-role-credential-plugin fs-extra chalk
 ```
 
 ## Later

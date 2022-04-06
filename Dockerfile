@@ -3,35 +3,38 @@ FROM alpine:${ENV_ALPINE_VERSION}
 
 ARG ENV_AWS_CDK_VERSION
 ARG ENV_GLIBC_VERSION
+ARG ENV_USER
 
+ENV USER=${ENV_USER}
 ENV ALPINE_VERSION=${ENV_ALPINE_VERSION}
 ENV AWS_CDK_VERSION=${ENV_AWS_CDK_VERSION}
 ENV GLIBC_VERSION=${ENV_GLIBC_VERSION}
+ENV HOME=/home/${ENV_USER}
 
 RUN echo "Alpine: $(ALPINE_VERSION)" && \
     echo "CDK: $(AWS_CDK_VERSION)" && \
     echo "GLIBC: $(GLIBC_VERSION)"
 
 RUN apk -v --no-cache --update add \
-        nodejs \
-        npm \
-        python3 \
-        py3-pip \
+        asciinema \
+        bash \
+        binutils \
         ca-certificates \
+        curl \
+        git \
         github-cli \
         groff \
         less \
-        bash \
-        binutils \
         make \
-        curl \
+        nodejs \
+        npm \
+        python3 \
+        sudo \
         wget \
-        zip \
-        git \
-        && \
+        zip && \
     update-ca-certificates && \
-    pip install yawsso && \
-    npm install -g aws-cdk@${AWS_CDK_VERSION} cdk-assume-role-credential-plugin fs-extra chalk @aws-cdk/cloudformation-diff \
+    npm install -g aws-cdk@${AWS_CDK_VERSION} cdk-assume-role-credential-plugin fs-extra @aws-cdk/cloudformation-diff \
+    && npm install -g chalk@4.1.2 --save-exact \
     && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk \
@@ -46,12 +49,17 @@ RUN apk -v --no-cache --update add \
     && aws/install \
     && rm awscliv2.zip 
 
+RUN adduser -D ${USER} \
+    && echo "${USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER} \
+    && chmod 0440 /etc/sudoers.d/${USER}
+
 VOLUME [ "/root/.aws" ]
 VOLUME [ "/opt/app" ]
 
 # Allow for caching python modules
 VOLUME ["/usr/lib/python3.8/site-packages/"]
 
-WORKDIR /opt/app
+USER ${USER}
+WORKDIR ${HOME}
 
 CMD ["cdk", "--version"]
