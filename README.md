@@ -31,7 +31,7 @@ coffee  - As per work but will run a security scan between build and test stage.
 Rest of demo here...
 [![asciicast](https://asciinema.org/a/484866.svg)](https://asciinema.org/a/484866)
 
-If you have not already setup aws sso this is how roughly, you need to be added to the right AD groups which are below the existing ones in AD.
+If you have not already setup aws sso this is how, you need to be added to the right AD groups which are below the existing ones in AD.
 
 ```
 ➜ aws configure sso --profile tribe-prod-developerAdmin
@@ -79,6 +79,162 @@ To use this profile, specify the profile name using --profile, as shown:
 
 aws s3 ls --profile tribe-tooling-developerAdmin
 ```
+
+This is how I've combined it with my AWS Azure SSO details as well...
+```
+# Current state, I keep aws and azure SSO config seperately and cat them togather...
+11:09:44 matherp@MACC02X9DETJG5H in ~ ➜ ls -la .aws/
+total 24
+drwxr-xr-x   7 matherp  CORP\Domain Users   224  7 Apr 10:55 .
+drwxr-x---+ 47 matherp  CORP\Domain Users  1504  7 Apr 10:56 ..
+drwxr-xr-x  27 matherp  CORP\Domain Users   864 17 Mar 11:38 chromium
+drwxr-xr-x   3 matherp  CORP\Domain Users    96  2 Apr 11:00 cli
+-rw-r--r--   1 matherp  CORP\Domain Users  1490  7 Apr 10:49 config
+-rw-r--r--   1 matherp  CORP\Domain Users   842  6 Apr 14:29 config.aws
+-rw-r--r--   1 matherp  CORP\Domain Users   647  7 Apr 10:39 config.azure
+
+# I cleaned out an sso directory and this cli cache directory before I started to remove all creds...
+11:09:48 matherp@MACC02X9DETJG5H in ~ ➜ ls -la .aws/cli/cache/
+total 0
+drwxr-xr-x  2 matherp  CORP\Domain Users  64  7 Apr 11:07 .
+drwxr-xr-x  3 matherp  CORP\Domain Users  96  2 Apr 11:00 ..
+
+# As such I have no tokens or access...
+11:11:20 matherp@MACC02X9DETJG5H in ~ ➜ aws sts get-caller-identity
+Error loading SSO Token: The SSO access token has either expired or is otherwise invalid.
+
+# I leave the default as SSO 
+11:09:53 matherp@MACC02X9DETJG5H in ~ ➜ cat .aws/config.aws .aws/config.azure > .aws/config
+11:09:53 matherp@MACC02X9DETJG5H in ~ ➜ cat .aws/config
+[default]
+sso_start_url = https://d-93670ced1d.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 906883863167
+sso_role_name = InfraAdmin
+region = eu-west-1
+output = json
+cli_auto_prompt=on-partial
+
+[profile tribe-dev-developerAdmin]
+sso_start_url = https://d-93670ced1d.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 069140385617
+sso_role_name = tribe-dev-developerAdmin
+region = eu-west-1
+output = json
+cli_auto_prompt=on-partial
+
+[profile tribe-prod-developerAdmin]
+sso_start_url = https://d-93670ced1d.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 184009931817
+sso_role_name = tribe-prod-developerAdmin
+region = eu-west-1
+output = json
+cli_auto_prompt=on-partial
+
+[profile tribe-tooling-developerAdmin]
+sso_start_url = https://d-93670ced1d.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 330941722859
+sso_role_name = tribe-tooling-developerAdmin
+region = eu-west-1
+output = json
+cli_auto_prompt=on-partial
+
+#[default]
+[profile aws-lz-dev]
+azure_tenant_id=7acc61c5-e4a5-49d2-a52a-3ce24c726371
+azure_app_id_uri=https://signin.aws.amazon.com/saml
+azure_default_username=philip.mather@paddypowerbetfair.com
+azure_default_role_arn=
+azure_default_duration_hours=1
+azure_default_remember_me=true
+region=eu-west-1
+cli_auto_prompt=on-partial
+
+[profile aws-lz-prod]
+azure_tenant_id=7acc61c5-e4a5-49d2-a52a-3ce24c726371
+azure_app_id_uri=https://signin.aws.amazon.com/saml/AWS
+azure_default_username=philip.mather@paddypowerbetfair.com
+azure_default_role_arn=
+azure_default_duration_hours=1
+azure_default_remember_me=true
+region=eu-west-1
+cli_auto_prompt=on-partial
+
+# As Azure AD is in dev and prod I prefer to have no default, especially as SSO can be the default...
+11:11:35 matherp@MACC02X9DETJG5H in ~ ➜ aws-azure-login
+Profile 'default' is not configured properly.
+
+11:11:55 matherp@MACC02X9DETJG5H in ~ ✗  aws-azure-login --profile aws-lz-dev
+Logging in with profile 'aws-lz-dev'...
+Using AWS SAML endpoint https://signin.aws.amazon.com/saml
+? Role: arn:aws:iam::326159127752:role/aws-lzsoc-dev-infraadmin
+? Session Duration Hours (up to 12): 1
+Assuming role arn:aws:iam::326159127752:role/aws-lzsoc-dev-infraadmin
+
+11:12:14 matherp@MACC02X9DETJG5H in ~ ✗  aws sts get-caller-identity --profile aws-lz-dev
+{
+    "UserId": "AROAUX4EZKTEPQEQEYIAO:philip.mather@paddypowerbetfair.com",
+    "Account": "326159127752",
+    "Arn": "arn:aws:sts::326159127752:assumed-role/aws-lzsoc-dev-infraadmin/philip.mather@paddypowerbetfair.com"
+}
+
+11:12:18 matherp@MACC02X9DETJG5H in ~ ➜ aws-azure-login --profile aws-lz-prod
+Logging in with profile 'aws-lz-prod'...
+Using AWS SAML endpoint https://signin.aws.amazon.com/saml
+? Role: arn:aws:iam::286909689322:role/aws-286909689322-infraadmin
+? Session Duration Hours (up to 12): 1
+Assuming role arn:aws:iam::286909689322:role/aws-286909689322-infraadmin
+
+11:12:30 matherp@MACC02X9DETJG5H in ~ ➜ aws sts get-caller-identity --profile aws-lz-prod
+{
+    "UserId": "AROAUFTJGNXVFMCKELJ5W:philip.mather@paddypowerbetfair.com",
+    "Account": "286909689322",
+    "Arn": "arn:aws:sts::286909689322:assumed-role/aws-286909689322-infraadmin/philip.mather@paddypowerbetfair.com"
+}
+
+11:12:36 matherp@MACC02X9DETJG5H in ~ ➜ ls -la .aws/credentials
+-rw-r--r--  1 matherp  CORP\Domain Users  1394  7 Apr 11:12 .aws/credentials
+
+11:12:58 matherp@MACC02X9DETJG5H in ~ ➜ ls -la .aws/cli/cache/
+total 0
+drwxr-xr-x  2 matherp  CORP\Domain Users  64  7 Apr 11:07 .
+drwxr-xr-x  3 matherp  CORP\Domain Users  96  2 Apr 11:00 ..
+
+11:13:06 matherp@MACC02X9DETJG5H in ~ ➜ aws sso login
+Attempting to automatically open the SSO authorization page in your default browser.
+If the browser does not open or you wish to use a different device to authorize this request, open the following URL:
+
+https://device.sso.eu-west-1.amazonaws.com/
+
+Then enter the code:
+
+HZPT-SPRN
+Successfully logged into Start URL: https://d-93670ced1d.awsapps.com/start
+
+11:13:33 matherp@MACC02X9DETJG5H in ~ ➜ aws sts get-caller-identity
+{
+    "UserId": "AROA5GJT5SJ7XPAABPOE6:philip.mather@paddypowerbetfair.com",
+    "Account": "906883863167",
+    "Arn": "arn:aws:sts::906883863167:assumed-role/AWSReservedSSO_InfraAdmin_ddf68f2f2ef15701/philip.mather@paddypowerbetfair.com"
+}
+
+11:14:23 matherp@MACC02X9DETJG5H in ~ ➜ ls -la .aws/sso/cache/
+total 16
+drwxr-xr-x  4 matherp  CORP\Domain Users   128  7 Apr 11:13 .
+drwxr-xr-x  3 matherp  CORP\Domain Users    96  7 Apr 11:13 ..
+-rw-------  1 matherp  CORP\Domain Users   980  7 Apr 11:13 botocore-client-id-eu-west-1.json
+-rw-------  1 matherp  CORP\Domain Users  1389  7 Apr 11:13 da56c5f5a74dbe7acd8501d11fec5a7d74d975b8.json
+
+11:14:30 matherp@MACC02X9DETJG5H in ~ ➜ ls -la .aws/cli/cache/
+total 8
+drwxr-xr-x  3 matherp  CORP\Domain Users    96  7 Apr 11:14 .
+drwxr-xr-x  3 matherp  CORP\Domain Users    96  2 Apr 11:00 ..
+-rw-------  1 matherp  CORP\Domain Users  1156  7 Apr 11:14 889bd370a6e1df37d5ad6fb2357acb72a1c6ad22.json
+```
+
 
 ## Later
 Alpine version not showing in ENVs
