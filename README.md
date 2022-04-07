@@ -235,6 +235,169 @@ drwxr-xr-x  3 matherp  CORP\Domain Users    96  2 Apr 11:00 ..
 -rw-------  1 matherp  CORP\Domain Users  1156  7 Apr 11:14 889bd370a6e1df37d5ad6fb2357acb72a1c6ad22.json
 ```
 
+# Expiremental
+https://anywhere.eks.amazonaws.com/docs/reference/clusterspec/gitops/
+
+```
+13:34:32 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main➜ brew install aws/tap/eks-anywhere
+Running `brew update --preinstall`...
+==> Auto-updated Homebrew!
+Updated 2 taps (homebrew/core and homebrew/services).
+==> New Formulae
+acl                   cloudflare-quiche     criterion             ddcutil               easeprobe             flyctl                gi-docgen             ifacemaker            jdtls                 libcython             mariadb@10.6          mongodb-atlas-cli     nvchecker             powerman-dockerize    shadowsocks-rust      ugit
+autocannon            compiledb             dagger                difftastic            epinio                fourmolu              highs                 inih                  kmod                  ltex-ls               melody                nickel                openjdk@17            rslint                stylish-haskell       wasm-tools
+==> Updated Formulae
+Updated 1286 formulae.
+==> Deleted Formulae
+autopano-sift-c                                                                            griffon                                                                                    gstreamermm                                                                                mozilla-addon-sdk
+
+==> Tapping aws/tap
+Cloning into '/usr/local/Homebrew/Library/Taps/aws/homebrew-tap'...
+remote: Enumerating objects: 3089, done.
+remote: Counting objects: 100% (1852/1852), done.
+remote: Compressing objects: 100% (637/637), done.
+remote: Total 3089 (delta 1518), reused 1462 (delta 1213), pack-reused 1237
+Receiving objects: 100% (3089/3089), 481.32 KiB | 2.62 MiB/s, done.
+Resolving deltas: 100% (2179/2179), done.
+Tapped 16 formulae (49 files, 625.7KB).
+==> Downloading https://ghcr.io/v2/homebrew/core/aws-iam-authenticator/manifests/0.5.5
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/aws-iam-authenticator/blobs/sha256:b4b7f41452eab334fd6be0cf72c03fe1a53ea4fbf454c16e220ca8b48b5d455c
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:b4b7f41452eab334fd6be0cf72c03fe1a53ea4fbf454c16e220ca8b48b5d455c?se=2022-04-07T12%3A45%3A00Z&sig=Uuk2mdYBDX6wYhnykUU4n35aTns0zutbdectVHodRd4%3D&sp=r&spr=https&sr=b&sv=2019-12-12
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/eksctl/manifests/0.90.0
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/eksctl/blobs/sha256:2c36a17090e4352c893a098854eb1bba08c63dff9a4b31d089af1a3771d120b9
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:2c36a17090e4352c893a098854eb1bba08c63dff9a4b31d089af1a3771d120b9?se=2022-04-07T12%3A45%3A00Z&sig=4%2BJnELWNDiCrpnvNDy1UsgXow4ksoXYqud6IWWlEIHw%3D&sp=r&spr=https&sr=b&sv=2019-12-12
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/kubernetes-cli/manifests/1.23.5
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/kubernetes-cli/blobs/sha256:cfa5d59c7c0181869b635fbf5383e1178e0c6cd43de504237498d64a1be31748
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:cfa5d59c7c0181869b635fbf5383e1178e0c6cd43de504237498d64a1be31748?se=2022-04-07T12%3A45%3A00Z&sig=i%2FKpkWlH0HCYvtzw8PVH4nDMGCS6DGDcLu5529d5MI4%3D&sp=r&spr=https&sr=b&sv=2019-12-12
+######################################################################## 100.0%
+==> Downloading https://anywhere-assets.eks.amazonaws.com/releases/eks-a/8/artifacts/eks-a/v0.8.0/darwin/amd64/eksctl-anywhere-v0.8.0-darwin-amd64.tar.gz
+######################################################################## 100.0%
+==> Installing eks-anywhere from aws/tap
+==> Installing dependencies for aws/tap/eks-anywhere: aws-iam-authenticator, eksctl and kubernetes-cli
+==> Installing aws/tap/eks-anywhere dependency: aws-iam-authenticator
+==> Pouring aws-iam-authenticator--0.5.5.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/aws-iam-authenticator/0.5.5: 6 files, 48.8MB
+==> Installing aws/tap/eks-anywhere dependency: eksctl
+==> Pouring eksctl--0.90.0.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/eksctl/0.90.0: 8 files, 116.6MB
+==> Installing aws/tap/eks-anywhere dependency: kubernetes-cli
+==> Pouring kubernetes-cli--1.23.5.monterey.bottle.tar.gz
+Error: The `brew link` step did not complete successfully
+The formula built, but is not symlinked into /usr/local
+Could not symlink bin/kubectl
+Target /usr/local/bin/kubectl
+already exists. You may want to remove it:
+  rm '/usr/local/bin/kubectl'
+
+To force the link and overwrite all conflicting files:
+  brew link --overwrite kubernetes-cli
+
+To list all files that would be deleted:
+  brew link --overwrite --dry-run kubernetes-cli
+
+Possible conflicting files are:
+/usr/local/bin/kubectl -> /Applications/Docker.app/Contents/Resources/bin/kubectl
+==> Summary
+🍺  /usr/local/Cellar/kubernetes-cli/1.23.5: 227 files, 56.8MB
+==> Installing aws/tap/eks-anywhere
+🍺  /usr/local/Cellar/eks-anywhere/0.8.0: 3 files, 47.0MB, built in 5 seconds
+==> Running `brew cleanup eks-anywhere`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+
+14:00:55 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main➜ kubectl describe nodes
+Name:               docker-desktop
+Roles:              control-plane,master
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=docker-desktop
+                    kubernetes.io/os=linux
+                    node-role.kubernetes.io/control-plane=
+                    node-role.kubernetes.io/master=
+                    node.kubernetes.io/exclude-from-external-load-balancers=
+Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Fri, 01 Apr 2022 15:01:45 +0100
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  docker-desktop
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 07 Apr 2022 14:01:08 +0100
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Thu, 07 Apr 2022 14:01:03 +0100   Fri, 01 Apr 2022 15:01:43 +0100   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Thu, 07 Apr 2022 14:01:03 +0100   Fri, 01 Apr 2022 15:01:43 +0100   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Thu, 07 Apr 2022 14:01:03 +0100   Fri, 01 Apr 2022 15:01:43 +0100   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Thu, 07 Apr 2022 14:01:03 +0100   Fri, 01 Apr 2022 15:02:15 +0100   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  192.168.65.4
+  Hostname:    docker-desktop
+Capacity:
+  cpu:                6
+  ephemeral-storage:  61255492Ki
+  hugepages-2Mi:      0
+  memory:             8048476Ki
+  pods:               110
+Allocatable:
+  cpu:                6
+  ephemeral-storage:  56453061334
+  hugepages-2Mi:      0
+  memory:             7946076Ki
+  pods:               110
+System Info:
+  Machine ID:                 c9b87f4d-0810-4707-b15c-453358b62e17
+  System UUID:                c9b87f4d-0810-4707-b15c-453358b62e17
+  Boot ID:                    00e0a119-248f-4cb9-a68c-a440f75c064c
+  Kernel Version:             5.10.104-linuxkit
+  OS Image:                   Docker Desktop
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://20.10.13
+  Kubelet Version:            v1.22.5
+  Kube-Proxy Version:         v1.22.5
+Non-terminated Pods:          (9 in total)
+  Namespace                   Name                                      CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                      ------------  ----------  ---------------  -------------  ---
+  kube-system                 coredns-78fcd69978-q9tkt                  100m (1%)     0 (0%)      70Mi (0%)        170Mi (2%)     5d22h
+  kube-system                 coredns-78fcd69978-wbqvq                  100m (1%)     0 (0%)      70Mi (0%)        170Mi (2%)     5d22h
+  kube-system                 etcd-docker-desktop                       100m (1%)     0 (0%)      100Mi (1%)       0 (0%)         5d22h
+  kube-system                 kube-apiserver-docker-desktop             250m (4%)     0 (0%)      0 (0%)           0 (0%)         5d22h
+  kube-system                 kube-controller-manager-docker-desktop    200m (3%)     0 (0%)      0 (0%)           0 (0%)         5d22h
+  kube-system                 kube-proxy-dj8kg                          0 (0%)        0 (0%)      0 (0%)           0 (0%)         5d22h
+  kube-system                 kube-scheduler-docker-desktop             100m (1%)     0 (0%)      0 (0%)           0 (0%)         5d22h
+  kube-system                 storage-provisioner                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         5d22h
+  kube-system                 vpnkit-controller                         0 (0%)        0 (0%)      0 (0%)           0 (0%)         5d22h
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests    Limits
+  --------           --------    ------
+  cpu                850m (14%)  0 (0%)
+  memory             240Mi (3%)  340Mi (4%)
+  ephemeral-storage  0 (0%)      0 (0%)
+  hugepages-2Mi      0 (0%)      0 (0%)
+Events:              <none>
+
+14:01:48 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main➜ CLUSTER_NAME=eksa-dev-cluster
+14:05:34 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main➜ eksctl anywhere generate clusterconfig $CLUSTER_NAME --provider docker > $CLUSTER_NAME.yaml
+
+14:17:02 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ sed -i '' -e 's/"deprecatedCgroupv1": false,/"deprecatedCgroupv1": true,/' ~/Library/Group\ Containers/group.com.docker/settings.json
+
+# Restart docker desktop as well
+
+14:11:37 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ eksctl anywhere create cluster -f $CLUSTER_NAME.yaml
+Error: failed to validate docker desktop: EKS Anywhere requires Docker desktop to be configured to use CGroups v1. Please  set `deprecatedCgroupv1:true` in your `~/Library/Group\ Containers/group.com.docker/settings.json` file
+
+
+```
 
 ## Later
 Alpine version not showing in ENVs
