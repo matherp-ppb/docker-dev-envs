@@ -4,11 +4,6 @@ Was trying to make this into a next generation of dev environment for AWS 2.0 wi
 Asciicinema recording shows how to install aws-azure-login and as /home/$USER/ is mounted into the container your login creds follow you.
 Assumes you have docker desktop + vscode setup, clone this repo and then run make to see a list of what commands are available.
 
-Todo
-   Why does cdn-dia not work ATM?
-   Keep aws-azure-login in
-   Remove /root/ mounts now that we use non-root user.
-
 Use the Makefile for shortcuts...
 ```
 10:06:37 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[📝] on 🅰  (eu-west-1) ✗  make
@@ -236,6 +231,9 @@ drwxr-xr-x  3 matherp  CORP\Domain Users    96  2 Apr 11:00 ..
 ```
 
 # Expiremental
+This deploys an EKS Anywhere cluster to your machine
+You must disable the expiriemental "Enable VirtioFS accelerated directory sharing" option in docker desktop otherwise you get a super cryptic permission denied message
+
 https://anywhere.eks.amazonaws.com/docs/reference/clusterspec/gitops/
 
 ```
@@ -386,22 +384,129 @@ Allocated resources:
   hugepages-2Mi      0 (0%)      0 (0%)
 Events:              <none>
 
-14:01:48 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main➜ CLUSTER_NAME=eksa-dev-cluster
+14:01:48 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main➜ CLUSTER_NAME=dev-cluster
 14:05:34 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main➜ eksctl anywhere generate clusterconfig $CLUSTER_NAME --provider docker > $CLUSTER_NAME.yaml
+
+14:11:37 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ eksctl anywhere create cluster -f $CLUSTER_NAME.yaml
+Error: failed to validate docker desktop: EKS Anywhere requires Docker desktop to be configured to use CGroups v1. Please  set `deprecatedCgroupv1:true` in your `~/Library/Group\ Containers/group.com.docker/settings.json` file
 
 14:17:02 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ sed -i '' -e 's/"deprecatedCgroupv1": false,/"deprecatedCgroupv1": true,/' ~/Library/Group\ Containers/group.com.docker/settings.json
 
 # Restart docker desktop as well
 
-14:11:37 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ eksctl anywhere create cluster -f $CLUSTER_NAME.yaml
-Error: failed to validate docker desktop: EKS Anywhere requires Docker desktop to be configured to use CGroups v1. Please  set `deprecatedCgroupv1:true` in your `~/Library/Group\ Containers/group.com.docker/settings.json` file
+22:24:11 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ eksctl anywhere create cluster -f $CLUSTER_NAME.yaml
+Performing setup and validations
+Warning: The docker infrastructure provider is meant for local development and testing only
+✅ Docker Provider setup is valid
+✅ Validate certificate for registry mirror
+✅ Create preflight validations pass
+Creating new bootstrap cluster
+Installing cluster-api providers on bootstrap cluster
+Provider specific post-setup
+Creating new workload cluster
+Installing networking on workload cluster
+Installing storage class on workload cluster
+Installing cluster-api providers on workload cluster
+Installing EKS-A secrets on workload cluster
+Moving cluster management from bootstrap to workload cluster
+Installing EKS-A custom components (CRD and controller) on workload cluster
+Creating EKS-A CRDs instances on workload cluster
+Installing AddonManager and GitOps Toolkit on workload cluster
+GitOps field not specified, bootstrap flux skipped
+Writing cluster config file
+Deleting bootstrap cluster
+🎉 Cluster created!
+
+22:29:05 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ export KUBECONFIG=${PWD}/${CLUSTER_NAME}/${CLUSTER_NAME}-eks-a-cluster.kubeconfig
+22:31:05 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ kubectl get ns
+NAME                                STATUS   AGE
+capd-system                         Active   3m
+capi-kubeadm-bootstrap-system       Active   3m7s
+capi-kubeadm-control-plane-system   Active   3m2s
+capi-system                         Active   3m8s
+cert-manager                        Active   4m3s
+default                             Active   4m38s
+eksa-system                         Active   2m37s
+etcdadm-bootstrap-provider-system   Active   3m6s
+etcdadm-controller-system           Active   3m4s
+kube-node-lease                     Active   4m40s
+kube-public                         Active   4m40s
+kube-system                         Active   4m40s
+22:31:09 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ kubectl apply -f "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
+deployment.apps/hello-eks-a created
+service/hello-eks-a created
+
+22:31:22 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ kubectl get pods -l app=hello-eks-a
+NAME                          READY   STATUS    RESTARTS   AGE
+hello-eks-a-9644dd8dc-m9sg8   1/1     Running   0          38s
+22:32:01 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ kubectl logs -l app=hello-eks-a
+2022/04/12 21:31:29 [notice] 1#1: built by gcc 10.3.1 20211027 (Alpine 10.3.1_git20211027)
+2022/04/12 21:31:29 [notice] 1#1: OS: Linux 5.10.104-linuxkit
+2022/04/12 21:31:29 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2022/04/12 21:31:29 [notice] 1#1: start worker processes
+2022/04/12 21:31:29 [notice] 1#1: start worker process 38
+2022/04/12 21:31:29 [notice] 1#1: start worker process 39
+2022/04/12 21:31:29 [notice] 1#1: start worker process 40
+2022/04/12 21:31:29 [notice] 1#1: start worker process 41
+2022/04/12 21:31:29 [notice] 1#1: start worker process 42
+2022/04/12 21:31:29 [notice] 1#1: start worker process 43
+22:32:12 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ kubectl port-forward deploy/hello-eks-a 8000:80
+Forwarding from 127.0.0.1:8000 -> 80
+Forwarding from [::1]:8000 -> 80
+^Z
+[1]+  Stopped                 kubectl port-forward deploy/hello-eks-a 8000:80
+22:32:39 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ✗  bg
+[1]+ kubectl port-forward deploy/hello-eks-a 8000:80 &
+22:32:41 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ curl localhost:8000
+Handling connection for 8000
+⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢
+
+Thank you for using
+
+███████╗██╗  ██╗███████╗
+██╔════╝██║ ██╔╝██╔════╝
+█████╗  █████╔╝ ███████╗
+██╔══╝  ██╔═██╗ ╚════██║
+███████╗██║  ██╗███████║
+╚══════╝╚═╝  ╚═╝╚══════╝
+
+ █████╗ ███╗   ██╗██╗   ██╗██╗    ██╗██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗████╗  ██║╚██╗ ██╔╝██║    ██║██║  ██║██╔════╝██╔══██╗██╔════╝
+███████║██╔██╗ ██║ ╚████╔╝ ██║ █╗ ██║███████║█████╗  ██████╔╝█████╗
+██╔══██║██║╚██╗██║  ╚██╔╝  ██║███╗██║██╔══██║██╔══╝  ██╔══██╗██╔══╝
+██║  ██║██║ ╚████║   ██║   ╚███╔███╔╝██║  ██║███████╗██║  ██║███████╗
+╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+
+You have successfully deployed the hello-eks-a pod hello-eks-a-9644dd8dc-m9sg8
+
+For more information check out
+https://anywhere.eks.amazonaws.com
+
+⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢⬡⬢
+22:32:51 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ kill %1
+[1]+  Terminated: 15          kubectl port-forward deploy/hello-eks-a 8000:80
+22:32:58 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ curl localhost:8000
+curl: (7) Failed to connect to localhost port 8000 after 5 ms: Connection refused
 
 
 ```
 
+## Next
+https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-connect/
+https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-iam-auth/ ?
+https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-delete/
+
+
 ## Later
-Alpine version not showing in ENVs
 https://cli.github.com/manual/gh_release_create
 change make gitTag to make tag for both github and docker
 add make release that adds tagged docker image to github and releases
+cdk-nag
+https://aws.amazon.com/blogs/containers/how-to-automate-amazon-eks-preventative-controls-in-ci-cd-using-cdk-and-opa-conftest/
+https://docs.aws.amazon.com/cdk/api/v1/docs/aws-eks-readme.html
+https://aws.amazon.com/blogs/architecture/field-notes-managing-an-amazon-eks-cluster-using-aws-cdk-and-cloud-resource-property-manager/
 Investigate https://app.snyk.io/account
+https://blog.beachgeek.co.uk/
+https://www.eksworkshop.com/
+https://www.eksworkshop.com/beginner/190_ocean/
+https://www.eksworkshop.com/020_prerequisites/workspace/
