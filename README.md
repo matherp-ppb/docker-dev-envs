@@ -492,21 +492,21 @@ curl: (7) Failed to connect to localhost port 8000 after 5 ms: Connection refuse
 ```
 
 ## Next
-https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-connect/
-https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-iam-auth/ ?
-https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-delete/
+- https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-connect/
+- https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-iam-auth/ ?
+- https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-delete/
 
 
 ## Later
-https://cli.github.com/manual/gh_release_create
-change make gitTag to make tag for both github and docker
-add make release that adds tagged docker image to github and releases
-cdk-nag
-https://aws.amazon.com/blogs/containers/how-to-automate-amazon-eks-preventative-controls-in-ci-cd-using-cdk-and-opa-conftest/
-https://docs.aws.amazon.com/cdk/api/v1/docs/aws-eks-readme.html
-https://aws.amazon.com/blogs/architecture/field-notes-managing-an-amazon-eks-cluster-using-aws-cdk-and-cloud-resource-property-manager/
-Investigate https://app.snyk.io/account
-https://blog.beachgeek.co.uk/
-https://www.eksworkshop.com/
-https://www.eksworkshop.com/beginner/190_ocean/
-https://www.eksworkshop.com/020_prerequisites/workspace/
+- https://cli.github.com/manual/gh_release_create
+- change make gitTag to make tag for both github and docker
+- add make release that adds tagged docker image to github and releases
+- cdk-nag
+- https://aws.amazon.com/blogs/containers/how-to-automate-amazon-eks-preventative-controls-in-ci-cd-using-cdk-and-opa-conftest/
+- https://docs.aws.amazon.com/cdk/api/v1/docs/aws-eks-readme.html
+- https://aws.amazon.com/blogs/architecture/field-notes-managing-an-amazon-eks-cluster-using-aws-cdk-and-cloud-resource-property-manager/
+- Investigate https://app.snyk.io/account
+- https://blog.beachgeek.co.uk/
+- https://www.eksworkshop.com/
+- https://www.eksworkshop.com/beginner/190_ocean/
+- https://www.eksworkshop.com/020_prerequisites/workspace/
