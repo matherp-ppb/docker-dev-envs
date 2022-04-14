@@ -77,17 +77,6 @@ aws s3 ls --profile tribe-tooling-developerAdmin
 
 This is how I've combined it with my AWS Azure SSO details as well...
 ```
-# Current state, I keep aws and azure SSO config seperately and cat them togather...
-11:09:44 matherp@MACC02X9DETJG5H in ~ ➜ ls -la .aws/
-total 24
-drwxr-xr-x   7 matherp  CORP\Domain Users   224  7 Apr 10:55 .
-drwxr-x---+ 47 matherp  CORP\Domain Users  1504  7 Apr 10:56 ..
-drwxr-xr-x  27 matherp  CORP\Domain Users   864 17 Mar 11:38 chromium
-drwxr-xr-x   3 matherp  CORP\Domain Users    96  2 Apr 11:00 cli
--rw-r--r--   1 matherp  CORP\Domain Users  1490  7 Apr 10:49 config
--rw-r--r--   1 matherp  CORP\Domain Users   842  6 Apr 14:29 config.aws
--rw-r--r--   1 matherp  CORP\Domain Users   647  7 Apr 10:39 config.azure
-
 # I cleaned out an sso directory and this cli cache directory before I started to remove all creds...
 11:09:48 matherp@MACC02X9DETJG5H in ~ ➜ ls -la .aws/cli/cache/
 total 0
@@ -99,7 +88,6 @@ drwxr-xr-x  3 matherp  CORP\Domain Users  96  2 Apr 11:00 ..
 Error loading SSO Token: The SSO access token has either expired or is otherwise invalid.
 
 # I leave the default as SSO 
-11:09:53 matherp@MACC02X9DETJG5H in ~ ➜ cat .aws/config.aws .aws/config.azure > .aws/config
 11:09:53 matherp@MACC02X9DETJG5H in ~ ➜ cat .aws/config
 [default]
 sso_start_url = https://d-93670ced1d.awsapps.com/start
@@ -206,7 +194,7 @@ https://device.sso.eu-west-1.amazonaws.com/
 
 Then enter the code:
 
-HZPT-SPRN
+####-####
 Successfully logged into Start URL: https://flutteruki-dev.awsapps.com/start
 
 11:13:33 matherp@MACC02X9DETJG5H in ~ ➜ aws sts get-caller-identity
@@ -487,9 +475,199 @@ https://anywhere.eks.amazonaws.com
 [1]+  Terminated: 15          kubectl port-forward deploy/hello-eks-a 8000:80
 22:32:58 matherp@MACC02X9DETJG5H in …/docker-dev-envs on 🌱main[🤷] ➜ curl localhost:8000
 curl: (7) Failed to connect to localhost port 8000 after 5 ms: Connection refused
+```
+
+So I know have a docker container where I can do CDK development & docker desktop with kubernetes running locally.
+I want to create a new EKS app, the pipeline to which is CDK based with a "local" development stage defined to use the EKS-A cluster on my laptop, when I progress the EKS app (probs this "hello-eks-a.yml") to NXT it will run in a cluster attached to my accounts AWS VPC.
+Hence I will create a github repo called detestmather-configrepo-aws-ppb and init a new CDK app in there.
+```
+13:38:41 matherp@MACC02X9DETJG5H in ~ ➜ cd Projects/src/github.com/Flutter-Global/
+13:39:14 matherp@MACC02X9DETJG5H in ~/Projects/src/github.com/Flutter-Global ➜ mkdir detestmather-configrepo-aws-ppb
+13:39:48 matherp@MACC02X9DETJG5H in ~/Projects/src/github.com/Flutter-Global ➜ cd detestmather-configrepo-aws-ppb/
+13:42:15 matherp@MACC02X9DETJG5H in ~/Projects/src/github.com/Flutter-Global/detestmather-configrepo-aws-ppb ➜ cdk init sample-app --language typescript
+Applying project template sample-app for typescript
+# Welcome to your CDK TypeScript project
+
+You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`DetestmatherConfigrepoAwsPpbStack`)
+which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+
+The `cdk.json` file tells the CDK Toolkit how to execute your app.
+
+## Useful commands
+
+* `npm run build`   compile typescript to js
+* `npm run watch`   watch for changes and compile
+* `npm run test`    perform the jest unit tests
+* `cdk deploy`      deploy this stack to your default AWS account/region
+* `cdk diff`        compare deployed stack with current state
+* `cdk synth`       emits the synthesized CloudFormation template
+
+Initializing a new git repository...
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+Executing npm install...
+npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm WARN deprecated source-map-url@0.4.1: See https://github.com/lydell/source-map-url#deprecated
+npm WARN deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
+npm WARN deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+npm WARN deprecated sane@4.1.0: some dependency vulnerabilities fixed, support for node < 10 dropped, and newer ECMAScript syntax/features added
+npm notice
+npm notice New minor version of npm available! 8.5.2 -> 8.6.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v8.6.0
+npm notice Run npm install -g npm@8.6.0 to update!
+npm notice
+✅ All done!
+****************************************************
+*** Newer version of CDK is available [2.20.0]   ***
+*** Upgrade recommended (npm install -g aws-cdk) ***
+****************************************************
+
+13:45:22 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master[🤷] ➜ ls -la
+total 856
+drwxr-xr-x   15 matherp  CORP\Domain Users     480 14 Apr 13:43 .
+drwxr-xr-x    7 matherp  CORP\Domain Users     224 14 Apr 13:42 ..
+drwxr-xr-x   12 matherp  CORP\Domain Users     384 14 Apr 13:42 .git
+-rw-r--r--    1 matherp  CORP\Domain Users      93 14 Apr 13:42 .gitignore
+-rw-r--r--    1 matherp  CORP\Domain Users      65 14 Apr 13:42 .npmignore
+-rw-r--r--    1 matherp  CORP\Domain Users     694 14 Apr 13:42 README.md
+drwxr-xr-x    3 matherp  CORP\Domain Users      96 14 Apr 13:42 bin
+-rw-r--r--    1 matherp  CORP\Domain Users     903 14 Apr 13:42 cdk.json
+-rw-r--r--    1 matherp  CORP\Domain Users     157 14 Apr 13:42 jest.config.js
+drwxr-xr-x    3 matherp  CORP\Domain Users      96 14 Apr 13:42 lib
+drwxr-xr-x  363 matherp  CORP\Domain Users   11616 14 Apr 13:43 node_modules
+-rw-r--r--    1 matherp  CORP\Domain Users  408210 14 Apr 13:43 package-lock.json
+-rw-r--r--    1 matherp  CORP\Domain Users     564 14 Apr 13:42 package.json
+drwxr-xr-x    3 matherp  CORP\Domain Users      96 14 Apr 13:42 test
+-rw-r--r--    1 matherp  CORP\Domain Users     650 14 Apr 13:42 tsconfig.json
+
+13:48:50 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master[++(1)] ➜ git commit -m "First commit, only as far as https://cdkworkshop.com/20-typescript/20-create-project/100-cdk-init.html"
+[master 750697f] First commit, only as far as https://cdkworkshop.com/20-typescript/20-create-project/100-cdk-init.html
+ 1 file changed, 11143 insertions(+)
+ create mode 100644 package-lock.json
+13:51:14 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master➜ git remote add origin git@github.com:Flutter-Global/detestmather-configrepo-aws-ppb.git
+
+13:55:34 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master✗  brew install gh
+Running `brew update --preinstall`...
+==> Auto-updated Homebrew!
+Updated 3 taps (homebrew/core, homebrew/services and aws/tap).
+==> New Formulae
+aws/tap/cbmc-starter-kit          ecflow-ui                         gops                              httpyac                           imposm3                           libmarpa                          werf
+==> Updated Formulae
+Updated 506 formulae.
+==> Deleted Formulae
+boost-python                                                                                                            komposition
+
+==> Downloading https://ghcr.io/v2/homebrew/core/gh/manifests/2.8.0
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/gh/blobs/sha256:25fef68de096bfc3ad4fda2d1c5afe0354141dfbb1be46af9b4f81e04d876518
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:25fef68de096bfc3ad4fda2d1c5afe0354141dfbb1be46af9b4f81e04d876518?se=2022-04-14T13%3A05%3A00Z&sig=NshIsNvoLDWiDn3ebc0sKEQPndoUaH%2Fqy2%2FrziqpKRI%3D&sp=r&
+######################################################################## 100.0%
+==> Pouring gh--2.8.0.monterey.bottle.tar.gz
+==> Caveats
+Bash completion has been installed to:
+  /usr/local/etc/bash_completion.d
+==> Summary
+🍺  /usr/local/Cellar/gh/2.8.0: 133 files, 33.9MB
+==> Running `brew cleanup gh`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+13:58:12 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master➜ gh repo create Flutter-Global/detestmather-configrepo-aws-ppb -d "Phil's AWS Test TLA for testing CDK apps." --internal --team cloud-auto-9000
+Welcome to GitHub CLI!
+
+To authenticate, please run `gh auth login`.
+14:04:16 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master✗  gh auth login
+? What account do you want to log into? GitHub.com
+? What is your preferred protocol for Git operations? SSH
+? Upload your SSH public key to your GitHub account? /Users/matherp/.ssh/id_ecdsa.pub
+? How would you like to authenticate GitHub CLI? Login with a web browser
+
+! First copy your one-time code: ####-####
+Press Enter to open github.com in your browser...
+✓ Authentication complete.
+- gh config set -h github.com git_protocol ssh
+✓ Configured git protocol
+HTTP 422: Validation Failed (https://api.github.com/user/keys)
+key is already in use
+
+14:05:02 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master✗  gh repo create Flutter-Global/detestmather-configrepo-aws-ppb -d "Phil's AWS Test TLA for testing CDK apps." --internal --team cloud-auto-9000
+✓ Created repository Flutter-Global/detestmather-configrepo-aws-ppb on GitHub
+14:05:24 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master➜ git push -u origin master
+Enumerating objects: 18, done.
+Counting objects: 100% (18/18), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (18/18), done.
+Writing objects: 100% (18/18), 99.58 KiB | 944.00 KiB/s, done.
+Total 18 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), done.
+To github.com:Flutter-Global/detestmather-configrepo-aws-ppb.git
+ * [new branch]      master -> master
+branch 'master' set up to track 'origin/master'.
+
+# On mac iterm I hit ⌘d to create a split window but the screen command can do similar elsewhere
+cd Projects/src/github.com/Flutter-Global/detestmather-configrepo-aws-ppb/
+npm run watch
+[14:17:30] Starting compilation in watch mode...
+# Add just leave this running over on a side window.
+
+14:16:44 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master➜ cdk synth
+Resources:
+  DetestmatherConfigrepoAwsPpbQueue0C4F2D33:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 300
+...
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
+        
+14:22:15 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master✗  aws sso login --profile tribe-dev-developerAdmin
+Attempting to automatically open the SSO authorization page in your default browser.
+If the browser does not open or you wish to use a different device to authorize this request, open the following URL:
+
+https://device.sso.eu-west-1.amazonaws.com/
+
+Then enter the code:
+
+FNNC-FTQD
+Successfully logged into Start URL: https://flutteruki-dev.awsapps.com/start
+
+14:22:41 matherp@MACC02X9DETJG5H in …/detestmather-configrepo-aws-ppb on 🌱master➜ aws sts get-caller-identity --profile tribe-dev-developerAdmin
+{
+    "UserId": "AROARAGIWR5I7PDTKJPHV:philip.mather@paddypowerbetfair.com",
+    "Account": "069140385617",
+    "Arn": "arn:aws:sts::069140385617:assumed-role/AWSReservedSSO_tribe-dev-developerAdmin_3f44477992b13f72/philip.mather@paddypowerbetfair.com"
+}
 
 
 ```
+
+
 
 ## Next
 - https://anywhere.eks.amazonaws.com/docs/tasks/cluster/cluster-connect/
