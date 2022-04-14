@@ -111,7 +111,7 @@ output = json
 cli_auto_prompt=on-partial
 
 [profile tribe-dev-developerAdmin]
-sso_start_url = https://d-93670ced1d.awsapps.com/start
+sso_start_url = https://flutteruki-dev.awsapps.com/start
 sso_region = eu-west-1
 sso_account_id = 069140385617
 sso_role_name = tribe-dev-developerAdmin
@@ -120,7 +120,7 @@ output = json
 cli_auto_prompt=on-partial
 
 [profile tribe-prod-developerAdmin]
-sso_start_url = https://d-93670ced1d.awsapps.com/start
+sso_start_url = https://flutteruki-dev.awsapps.com/start
 sso_region = eu-west-1
 sso_account_id = 184009931817
 sso_role_name = tribe-prod-developerAdmin
@@ -129,7 +129,7 @@ output = json
 cli_auto_prompt=on-partial
 
 [profile tribe-tooling-developerAdmin]
-sso_start_url = https://d-93670ced1d.awsapps.com/start
+sso_start_url = https://flutteruki-dev.awsapps.com/start
 sso_region = eu-west-1
 sso_account_id = 330941722859
 sso_role_name = tribe-tooling-developerAdmin
@@ -207,7 +207,7 @@ https://device.sso.eu-west-1.amazonaws.com/
 Then enter the code:
 
 HZPT-SPRN
-Successfully logged into Start URL: https://d-93670ced1d.awsapps.com/start
+Successfully logged into Start URL: https://flutteruki-dev.awsapps.com/start
 
 11:13:33 matherp@MACC02X9DETJG5H in ~ ➜ aws sts get-caller-identity
 {
