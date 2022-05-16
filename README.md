@@ -31,7 +31,7 @@ If you have not already setup aws sso this is how, you need to be added to the r
 ```
 ➜ aws configure sso --profile tribe-prod-developerAdmin
 > aws configure sso --profile tribe-prod-developerAdmin
-SSO start URL [None]: https://d-93670ced1d.awsapps.com/start
+SSO start URL [None]: https://flutteruki-dev.awsapps.com/start
 SSO Region [None]: eu-west-1
 There are 5 AWS accounts available to you.
 Using the account ID 184009931817
@@ -46,7 +46,7 @@ aws s3 ls --profile tribe-tooling-developerAdmin
 
 ➜ aws configure sso --profile tribe-dev-developerAdmin
 > aws configure sso --profile tribe-dev-developerAdmin
-SSO start URL [None]: https://d-93670ced1d.awsapps.com/start
+SSO start URL [None]: https://flutteruki-dev.awsapps.com/start
 SSO Region [None]: eu-west-1
 There are 5 AWS accounts available to you.
 Using the account ID 069140385617
@@ -61,7 +61,7 @@ aws s3 ls --profile tribe-dev-developerAdmin
 
 ➜ aws configure sso --profile tribe-tooling-developerAdmin
 > aws configure sso --profile tribe-tooling-developerAdmin
-SSO start URL [None]: https://d-93670ced1d.awsapps.com/start
+SSO start URL [None]: https://flutteruki-dev.awsapps.com/start
 SSO Region [None]: eu-west-1
 There are 5 AWS accounts available to you.
 Using the account ID 330941722859
@@ -90,7 +90,7 @@ Error loading SSO Token: The SSO access token has either expired or is otherwise
 # I leave the default as SSO 
 11:09:53 matherp@MACC02X9DETJG5H in ~ ➜ cat .aws/config
 [default]
-sso_start_url = https://d-93670ced1d.awsapps.com/start
+sso_start_url = https://flutteruki-dev.awsapps.com/start
 sso_region = eu-west-1
 sso_account_id = 906883863167
 sso_role_name = InfraAdmin
